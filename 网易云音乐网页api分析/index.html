@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>网易云音乐网页API分析 - Muffin&#39;s Blog</title><meta name="Description" content="关于 Muffin&#39;s Blog"><meta property="og:title" content="网易云音乐网页API分析" />
+<meta property="og:description" content="先随便选一个接口分析一下，就选评论接口吧。 1.获取评论 进入Chrome开发者模式可以看到 这个就是获取评论的接口，请求方式是POST，请求体有" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sparse.codes/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5api%E5%88%86%E6%9E%90/" />
+<meta property="og:image" content="https://sparse.codes/logo.png"/>
+<meta property="article:published_time" content="2019-06-02T11:07:45+08:00" />
+<meta property="article:modified_time" content="2019-06-07T20:19:10+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://sparse.codes/logo.png"/>
+
+<meta name="twitter:title" content="网易云音乐网页API分析"/>
+<meta name="twitter:description" content="先随便选一个接口分析一下，就选评论接口吧。 1.获取评论 进入Chrome开发者模式可以看到 这个就是获取评论的接口，请求方式是POST，请求体有"/>
+<meta name="application-name" content="Muffin&#39;s Blog">
+<meta name="apple-mobile-web-app-title" content="Muffin&#39;s Blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://sparse.codes/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5api%E5%88%86%E6%9E%90/" /><link rel="prev" href="https://sparse.codes/go%E8%AF%AD%E8%A8%80%E7%BC%96%E5%86%99telegram%E8%AF%84%E8%AE%BA%E6%9C%BA%E5%99%A8%E4%BA%BA/" /><link rel="next" href="https://sparse.codes/codeforces-round-582-div3/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "网易云音乐网页API分析",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/sparse.codes\/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5api%E5%88%86%E6%9E%90\/"
+        },"image": ["https:\/\/sparse.codes\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Python, 爬虫","wordcount":  5455 ,
+        "url": "https:\/\/sparse.codes\/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5api%E5%88%86%E6%9E%90\/","datePublished": "2019-06-02T11:07:45+08:00","dateModified": "2019-06-07T20:19:10+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "xxxx","logo": "https:\/\/sparse.codes\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "muffin"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Muffin&#39;s Blog"><span class="header-title-pre"><i class='fa fa-code fa-fw'></i></span>Muffin&#39;s Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><a class="menu-item" href="https://github.com/muffin1998" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Muffin&#39;s Blog"><span class="header-title-pre"><i class='fa fa-code fa-fw'></i></span>Muffin&#39;s Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a class="menu-item" href="https://github.com/muffin1998" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">网易云音乐网页API分析</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>muffin</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2019-06-02">2019-06-02</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5455 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 11 分钟&nbsp;<span id="/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5api%E5%88%86%E6%9E%90/" class="leancloud_visitors" data-flag-title="网易云音乐网页API分析">
+                        <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1获取评论-">1.获取评论</a></li>
+        <li><a href="#2获取歌词-">2.获取歌词</a></li>
+        <li><a href="#3获取播放列表-">3.获取播放列表</a></li>
+        <li><a href="#4搜索-">4.搜索</a>
+          <ul>
+            <li><a href="#41-推荐-">4.1 推荐</a></li>
+            <li><a href="#42-各种搜索-">4.2 各种搜索</a></li>
+          </ul>
+        </li>
+        <li><a href="#5用户token-">5.用户Token</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>先随便选一个接口分析一下，就选评论接口吧。</p>
+<h3 id="1获取评论-">1.获取评论</h3>
+<p>进入Chrome开发者模式可以看到</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.ax1x.com/2019/06/02/VGR8Yj.png"
+        data-srcset="https://s2.ax1x.com/2019/06/02/VGR8Yj.png, https://s2.ax1x.com/2019/06/02/VGR8Yj.png 1.5x, https://s2.ax1x.com/2019/06/02/VGR8Yj.png 2x"
+        data-sizes="auto"
+        alt="https://s2.ax1x.com/2019/06/02/VGR8Yj.png"
+        title="avatar" />
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.ax1x.com/2019/06/02/VGWc5Q.png"
+        data-srcset="https://s2.ax1x.com/2019/06/02/VGWc5Q.png, https://s2.ax1x.com/2019/06/02/VGWc5Q.png 1.5x, https://s2.ax1x.com/2019/06/02/VGWc5Q.png 2x"
+        data-sizes="auto"
+        alt="https://s2.ax1x.com/2019/06/02/VGWc5Q.png"
+        title="avatar" /></p>
+<p>这个就是获取评论的接口，请求方式是POST，请求体有两个参数params和encSecKey，在请求的Initiator可以看到发出请求的代码在core_xxxx.js这个文件，代码肯定经过混淆，先下载到本地格式化一下。在js文件中搜索encSecKey，找到生成参数的相关代码段，可以看到参数由asrsea这个函数生成。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">bYc0x</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">asrsea</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">i8a</span><span class="p">),</span> <span class="nx">bkY9P</span><span class="p">([</span><span class="s2">&#34;流泪&#34;</span><span class="p">,</span> <span class="s2">&#34;强&#34;</span><span class="p">]),</span> <span class="nx">bkY9P</span><span class="p">(</span><span class="nx">VM5R</span><span class="p">.</span><span class="nx">md</span><span class="p">),</span> <span class="nx">bkY9P</span><span class="p">([</span><span class="s2">&#34;爱心&#34;</span><span class="p">,</span> <span class="s2">&#34;女孩&#34;</span><span class="p">,</span> <span class="s2">&#34;惊恐&#34;</span><span class="p">,</span> <span class="s2">&#34;大笑&#34;</span><span class="p">]));</span>
+<span class="nx">e8e</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">k8c</span><span class="p">.</span><span class="nx">cz9q</span><span class="p">({</span>
+    <span class="nx">params</span><span class="o">:</span> <span class="nx">bYc0x</span><span class="p">.</span><span class="nx">encText</span><span class="p">,</span>
+    <span class="nx">encSecKey</span><span class="o">:</span> <span class="nx">bYc0x</span><span class="p">.</span><span class="nx">encSecKey</span>
+<span class="p">})</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>继续在js文件中搜索这个函数，可以看到生成参数的相关函数：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">a</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">e</span><span class="p">,</span> <span class="nx">b</span> <span class="o">=</span> <span class="s2">&#34;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&#34;</span><span class="p">,</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">a</span> <span class="o">&gt;</span> <span class="nx">d</span><span class="p">;</span> <span class="nx">d</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="nx">e</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="nx">b</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+    <span class="nx">e</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">e</span><span class="p">),</span>
+    <span class="nx">c</span> <span class="o">+=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">c</span>
+<span class="p">}</span>
+<span class="c1">//生成encText，即params
+</span><span class="c1"></span><span class="kd">function</span> <span class="nx">b</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">CryptoJS</span><span class="p">.</span><span class="nx">enc</span><span class="p">.</span><span class="nx">Utf8</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">b</span><span class="p">),</span>                     <span class="c1">//密钥
+</span><span class="c1"></span>        <span class="nx">d</span> <span class="o">=</span> <span class="nx">CryptoJS</span><span class="p">.</span><span class="nx">enc</span><span class="p">.</span><span class="nx">Utf8</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="s2">&#34;0102030405060708&#34;</span><span class="p">),</span>    <span class="c1">//初始化向量
+</span><span class="c1"></span>        <span class="nx">e</span> <span class="o">=</span> <span class="nx">CryptoJS</span><span class="p">.</span><span class="nx">enc</span><span class="p">.</span><span class="nx">Utf8</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">a</span><span class="p">),</span>                     <span class="c1">//数据
+</span><span class="c1"></span>        <span class="nx">f</span> <span class="o">=</span> <span class="nx">CryptoJS</span><span class="p">.</span><span class="nx">AES</span><span class="p">.</span><span class="nx">encrypt</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nx">iv</span><span class="o">:</span> <span class="nx">d</span><span class="p">,</span>
+            <span class="nx">mode</span><span class="o">:</span> <span class="nx">CryptoJS</span><span class="p">.</span><span class="nx">mode</span><span class="p">.</span><span class="nx">CBC</span>
+        <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">f</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span>
+<span class="p">}</span>
+<span class="c1">//生成encSecKey
+</span><span class="c1"></span><span class="kd">function</span> <span class="nx">c</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">e</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">setMaxDigits</span><span class="p">(</span><span class="mi">131</span><span class="p">),</span>
+    <span class="nx">d</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RSAKeyPair</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="s2">&#34;&#34;</span><span class="p">,</span> <span class="nx">c</span><span class="p">),</span>
+    <span class="nx">e</span> <span class="o">=</span> <span class="nx">encryptedString</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="c1">//spider 加密函数
+</span><span class="c1"></span><span class="kd">function</span> <span class="nx">d</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">e</span><span class="p">,</span> <span class="nx">f</span><span class="p">,</span> <span class="nx">g</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">h</span> <span class="o">=</span> <span class="p">{},</span>
+        <span class="nx">i</span> <span class="o">=</span> <span class="nx">a</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>  <span class="c1">//随机生成一个由a~z,A~Z,0~9组成的长度为a的字符串（AES密钥）
+</span><span class="c1"></span>    <span class="k">return</span> <span class="nx">h</span><span class="p">.</span><span class="nx">encText</span> <span class="o">=</span> <span class="nx">b</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">g</span><span class="p">),</span>
+    <span class="nx">h</span><span class="p">.</span><span class="nx">encText</span> <span class="o">=</span> <span class="nx">b</span><span class="p">(</span><span class="nx">h</span><span class="p">.</span><span class="nx">encText</span><span class="p">,</span> <span class="nx">i</span><span class="p">),</span>
+    <span class="nx">h</span><span class="p">.</span><span class="nx">encSecKey</span> <span class="o">=</span> <span class="nx">c</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">e</span><span class="p">,</span> <span class="nx">f</span><span class="p">),</span>
+    <span class="nx">h</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">e</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">f</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="k">return</span> <span class="nx">f</span><span class="p">.</span><span class="nx">encText</span> <span class="o">=</span> <span class="nx">c</span><span class="p">(</span><span class="nx">a</span> <span class="o">+</span> <span class="nx">e</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">d</span><span class="p">),</span>
+    <span class="nx">f</span>
+<span class="p">}</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">asrsea</span> <span class="o">=</span> <span class="nx">d</span><span class="p">,</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">ecnonasr</span> <span class="o">=</span> <span class="nx">e</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>params的生成过程比较简单，在函数d中可以看到params由两次调用函数b得到：函数b是AES加密的过程，参数a是要加密的数据，参数b是密钥，params经过两次AES加密得到，通过调试可以看到第一次加密：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">h</span><span class="p">.</span><span class="nx">encText</span> <span class="o">=</span> <span class="nx">b</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">g</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>参数g是固定的：</p>
+<blockquote>
+<p>0CoJUm6Qyw8W8jud</p>
+</blockquote>
+<p>而参数d则是请求参数构成的json字符串，在上面的请求中是：</p>
+<blockquote>
+<p>{&ldquo;rid&rdquo;:&ldquo;R_SO_4_1361988914&rdquo;,&ldquo;offset&rdquo;:&ldquo;0&rdquo;,&ldquo;total&rdquo;:&ldquo;true&rdquo;,&ldquo;limit&rdquo;:&ldquo;20&rdquo;,&ldquo;csrf_token&rdquo;:&quot;&quot;}</p>
+</blockquote>
+<p>offset代表获取的第一条评论的偏移量，limit是获取的评论数。</p>
+<p>第二次加密是使用随机生成的密钥（长度为16）加密第一次加密生成的数据。为了方便测试，在原网页获取随机生成的某密钥以及用这个密钥加密得到的params和encSecKey：</p>
+<p>key:</p>
+<blockquote>
+<p>6lauqIqaJelwkFKM</p>
+</blockquote>
+<p>params:</p>
+<blockquote>
+<p>1NGJ2rghqo1ToCy5r27rEDqRCNEZxxKk2BvmOQoud6GTNfPZKGRJVFmqfJWeAXYQi4V/++6HKpDjFDfB+TZZ+cmDQF2ywgL9w5Ow8r+mtLG95D7rfUfRkT7GiTn4KMCt+mIM9dtgtIoKXSZ77407F/ZI/GCfslievQ0IfnBAR8SoKQmz8XaQgC1Lxo93VxQ4</p>
+</blockquote>
+<p>encSecKey:</p>
+<blockquote>
+<p>2d1a892a0d7b3101eb00936c4915b2541bc378b58a5ccf6ab3ca939da1fd1fcee7b7456feef0a0d9115c1b5aad8aa64674df8249597e9e74ab66cb5fa84a624f174ed59e786fef748528fff098fa749c11aa06d7d86b7a41d917277efb3f14f8b974ddb2cb5df638ec36d3de8c2f02335cb1990b150a8deafc186c2007dea21c</p>
+</blockquote>
+<p>其中AES加密的填充方式是pkcs#7padding，块大小是16 Bytes，加密后的数据默认使用base64编码，根据pkcs#7padding的规则，需要在数据后面添加(16 - n%16)个byte（无论n的长度是否是16的整数倍），且byte的值也为(16 - n%16)。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">Crypto.Cipher</span> <span class="kn">import</span> <span class="n">AES</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+
+<span class="k">def</span> <span class="nf">pkcs7_padding</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+	<span class="n">n</span> <span class="o">=</span> <span class="mi">16</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">%</span> <span class="mi">16</span>
+	<span class="n">data</span> <span class="o">+=</span> <span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">data</span>
+
+<span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0CoJUm6Qyw8W8jud&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">mode</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">MODE_CBC</span>
+<span class="n">iv</span> <span class="o">=</span> <span class="s1">&#39;0102030405060708&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+<span class="n">aes</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">iv</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;{&#34;rid&#34;:&#34;R_SO_4_1361988914&#34;,&#34;offset&#34;:&#34;0&#34;,&#34;total&#34;:&#34;true&#34;,&#34;limit&#34;:&#34;20&#34;,&#34;csrf_token&#34;:&#34;&#34;}&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pkcs7_padding</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">endata</span> <span class="o">=</span> <span class="n">aes</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">endata</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">endata</span><span class="p">)</span>
+
+<span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;6lauqIqaJelwkFKM&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+<span class="n">aes</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">iv</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">pkcs7_padding</span><span class="p">(</span><span class="n">endata</span><span class="p">)</span>
+
+<span class="n">endata</span> <span class="o">=</span> <span class="n">aes</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">endata</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">endata</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">endata</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>得到的数据与请求中的一致。</p>
+<p>再分析一下encSecKey的生成过程，在函数d中可以看到encSecKey由函数c生成：函数c将随机生成的密钥（就是上面生成params时AES加密的密钥）经过RSA加密得到encSecKey。
+关于RSA加密的过程，源代码在这里可以看到:http://www.ohdave.com/rsa</p>
+<p>RSAKeyPair包括encryptionExponent,decryptionExponent,modulus（分别对应代码中RSAKeyPair函数的三个参数，根据RSA加密的过程：公钥包含两个大整数，n和e，假设要加密的数据是m，则加密后的数据$c ≡ m^e \ (mod \ n)$,这里的e就是encryptionExponent，n就是modulus。</p>
+<p>e和n两个数应该是固定的（公钥应该不会频繁更换吧），在RSAKeyPair函数打断点得到e和n的值分别是：</p>
+<blockquote>
+<p>010001</p>
+</blockquote>
+<p>和</p>
+<blockquote>
+<p>00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7</p>
+</blockquote>
+<p>一开始我尝试直接对数据进行加密：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">rsa</span>
+<span class="kn">import</span> <span class="nn">binascii</span>
+
+<span class="n">rsa_n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s2">&#34;00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7&#34;</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+<span class="n">rsa_e</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s2">&#34;010001&#34;</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+<span class="n">key</span> <span class="o">=</span> <span class="n">rsa</span><span class="o">.</span><span class="n">PublicKey</span><span class="p">(</span><span class="n">rsa_n</span><span class="p">,</span> <span class="n">rsa_e</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="s2">&#34;6lauqIqaJelwkFKM&#34;</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+
+<span class="n">encrypted_data</span> <span class="o">=</span> <span class="n">rsa</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+<span class="n">hex_str</span> <span class="o">=</span> <span class="n">binascii</span><span class="o">.</span><span class="n">b2a_hex</span><span class="p">(</span><span class="n">encrypted_data</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">hex_str</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>尝试请求接口，但是没有返回数据，猜测跟数据转换成的整数有关，回到js代码中加密的代码段看看：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">encryptedString</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">f</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">h</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">j</span><span class="p">,</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">l</span><span class="p">,</span> <span class="nx">c</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">,</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="nx">e</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">d</span> <span class="o">&gt;</span> <span class="nx">e</span><span class="p">;)</span> <span class="nx">c</span><span class="p">[</span><span class="nx">e</span><span class="p">]</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">e</span><span class="p">),</span>
+    <span class="nx">e</span><span class="o">++</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(;</span> <span class="mi">0</span> <span class="o">!=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">length</span> <span class="o">%</span> <span class="nx">a</span><span class="p">.</span><span class="nx">chunkSize</span><span class="p">;)</span> <span class="nx">c</span><span class="p">[</span><span class="nx">e</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">f</span> <span class="o">=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="nx">g</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span><span class="p">,</span> <span class="nx">e</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">f</span> <span class="o">&gt;</span> <span class="nx">e</span><span class="p">;</span> <span class="nx">e</span> <span class="o">+=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">chunkSize</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nx">j</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BigInt</span><span class="p">,</span> <span class="nx">h</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">e</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">e</span> <span class="o">+</span> <span class="nx">a</span><span class="p">.</span><span class="nx">chunkSize</span><span class="p">;</span> <span class="o">++</span><span class="nx">h</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">j</span><span class="p">.</span><span class="nx">digits</span><span class="p">[</span><span class="nx">h</span><span class="p">]</span> <span class="o">=</span> <span class="nx">c</span><span class="p">[</span><span class="nx">i</span><span class="o">++</span><span class="p">]</span>
+            <span class="nx">j</span><span class="p">.</span><span class="nx">digits</span><span class="p">[</span><span class="nx">h</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">c</span><span class="p">[</span><span class="nx">i</span><span class="o">++</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span>
+        <span class="p">}</span>
+        <span class="c1">//j是待加密数据转换后的整数
+</span><span class="c1"></span>        <span class="nx">k</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">barrett</span><span class="p">.</span><span class="nx">powMod</span><span class="p">(</span><span class="nx">j</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">e</span><span class="p">),</span>
+        <span class="nx">l</span> <span class="o">=</span> <span class="mi">16</span> <span class="o">==</span> <span class="nx">a</span><span class="p">.</span><span class="nx">radix</span> <span class="o">?</span> <span class="nx">biToHex</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span> <span class="o">:</span> <span class="nx">biToString</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">radix</span><span class="p">),</span>
+        <span class="nx">g</span> <span class="o">+=</span> <span class="nx">l</span> <span class="o">+</span> <span class="s2">&#34; &#34;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">g</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">g</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在本地测试输出j的值：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">biToHex</span><span class="p">(</span><span class="nx">j</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>对这个值进行加密：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">hex_str</span> <span class="o">=</span> <span class="s1">&#39;4d4b466b776c654a6171497175616c36&#39;</span>
+<span class="n">rsa_m</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hex_str</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+<span class="n">rsa_c</span> <span class="o">=</span> <span class="n">rsa</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">encrypt_int</span><span class="p">(</span><span class="n">rsa_m</span><span class="p">,</span> <span class="n">rsa_e</span><span class="p">,</span> <span class="n">rsa_n</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">rsa_c</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这次得到的数据跟请求中的参数一致（RSA加密生成的数据可能每次都不一样，跟填充方式有关），查阅RSA相关的资料知道算法是在固定长度的块上面进行操作，如果数据长度大于块大小要分割，小于要填充，根据上面的代码，这里的填充方式是直接在后面补&rsquo;\0&rsquo;，加密时对每块进行加密，生成的数据之间用空格隔开，至于块大小怎么确定暂时不知道，先不管。
+为了了解数据是怎么转换成整数的，需要了解BigInt的结构，通过调试可以知道BigInt包含一个数组，观察上面的代码可以知道数据转换成BigInt的过程是把每两个的字符的ascii码值逆序存放到数组的一个元素中，例如字符串：&ldquo;cd&rdquo;,写成二进制的形式是：</p>
+<blockquote>
+<p>0110 0011 / 0010 0100</p>
+</blockquote>
+<p>放到BigInt中是：</p>
+<blockquote>
+<p>0010 0100 0110 0011</p>
+</blockquote>
+<p>接下来看看BigInt是怎么转换成整数的，找到BigInt转Hex的函数（因为这个函数最简单2333）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">reverseStr</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">b</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">c</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">c</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">--</span><span class="nx">c</span><span class="p">)</span> <span class="nx">b</span> <span class="o">+=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">b</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">digitToHex</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">4</span> <span class="o">&gt;</span> <span class="nx">i</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="nx">c</span> <span class="o">+=</span> <span class="nx">hexToChar</span><span class="p">[</span><span class="nx">a</span> <span class="o">&amp;</span> <span class="nx">b</span><span class="p">],</span>
+    <span class="nx">a</span> <span class="o">&gt;&gt;&gt;=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">reverseStr</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">biToHex</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">b</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">biHighIndex</span><span class="p">(</span><span class="nx">a</span><span class="p">),</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">biHighIndex</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span> <span class="nx">d</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">--</span><span class="nx">d</span><span class="p">)</span> <span class="nx">b</span> <span class="o">+=</span> <span class="nx">digitToHex</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">digits</span><span class="p">[</span><span class="nx">d</span><span class="p">]);</span>
+    <span class="k">return</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这个函数逆序对BigInt的数组元素进行如下操作：从低位开始每4个二进制位转对应的16进制，并逆序输出。
+所以数据转整数的整个过程其实就是把数据以小端方式存储（跟直接加密的区别就在于大端和小端），例如字符串&quot;cdef&rdquo;：</p>
+<p>0110 0011 / 0010 0100 / 0110 0101 / 0110 0110</p>
+<p>转换成小端：</p>
+<p>0110 0110 / 0110 0101 / 0010 0100 / 0110 0011</p>
+<p>转换成16进制就是：</p>
+<p>0x66656463</p>
+<p>测试一下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">table</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">,</span> <span class="s1">&#39;7&#39;</span><span class="p">,</span> <span class="s1">&#39;8&#39;</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">]</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="s2">&#34;6lauqIqaJelwkFKM&#34;</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+<span class="n">hex_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+	<span class="n">hex_str</span> <span class="o">+=</span> <span class="n">table</span><span class="p">[(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&amp;</span> <span class="mh">0xf0</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">]</span>
+	<span class="n">hex_str</span> <span class="o">+=</span> <span class="n">table</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&amp;</span> <span class="mh">0xf</span><span class="p">]</span>
+
+<span class="n">rsa_m</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hex_str</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+<span class="n">rsa_c</span> <span class="o">=</span> <span class="n">rsa</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">encrypt_int</span><span class="p">(</span><span class="n">rsa_m</span><span class="p">,</span> <span class="n">rsa_e</span><span class="p">,</span> <span class="n">rsa_n</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">rsa_c</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这次得到的结果与请求参数的一致，再次发送请求已经可以获取到数据了。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.ax1x.com/2019/06/04/VYLrZQ.png"
+        data-srcset="https://s2.ax1x.com/2019/06/04/VYLrZQ.png, https://s2.ax1x.com/2019/06/04/VYLrZQ.png 1.5x, https://s2.ax1x.com/2019/06/04/VYLrZQ.png 2x"
+        data-sizes="auto"
+        alt="https://s2.ax1x.com/2019/06/04/VYLrZQ.png"
+        title="avatar" /></p>
+<p>（看了文档才知道白折腾了。。。文档里面有说明是逆序的）
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.ax1x.com/2019/06/04/VYxdHO.png"
+        data-srcset="https://s2.ax1x.com/2019/06/04/VYxdHO.png, https://s2.ax1x.com/2019/06/04/VYxdHO.png 1.5x, https://s2.ax1x.com/2019/06/04/VYxdHO.png 2x"
+        data-sizes="auto"
+        alt="https://s2.ax1x.com/2019/06/04/VYxdHO.png"
+        title="avatar" /></p>
+<p>经过上面的分析可以大概得出请求的流程：前端先把请求的参数包装成json字符串，使用一个固定的密钥加密得到第一次加密的数据，再使用随机生成的密钥加密第一次加密生成的数据最终得到传递给服务器的参数，接着加密随机生成的密钥传递给服务器。服务器端用私钥解密得到前端随机生成的密钥，再用这个密钥对加密过的参数解密，经过两次解密最终得到参数。</p>
+<p>关于csrf_token参数，这个是用户登录以后才会有的，之后可能会补充更新一下这部分的接口，另外如果用postman之类的工具请求接口好像直接把参数放在query部分才行，一开始放到post body获取不到数据。</p>
+<p>最后把获取评论的接口贴一下：</p>
+<p>url: <a href="https://music.163.com/weapi/v1/resource/comments/ID">https://music.163.com/weapi/v1/resource/comments/ID</a>
+method: POST
+query: csrf_token
+params: ID(string), offset(int), limit(int), total(boolean), csrf_token(string)</p>
+<p>当请求歌曲评论时，ID的格式是R_SO_4_ + 歌曲ID。
+歌单：A_PL_0 + 歌单ID。
+电台：A_DJ_1 + 电台ID</p>
+<p>其他类型的评论ID可以在开发者模式下获取相应请求url得到。</p>
+<h3 id="2获取歌词-">2.获取歌词</h3>
+<p>通过上面的分析已经得到参数加密的方法，所以我们只需要知道请求这个接口都有什么参数就可以了。</p>
+<p>example:</p>
+<blockquote>
+<p>{&ldquo;id&rdquo;:&ldquo;1361988914&rdquo;,&ldquo;lv&rdquo;:-1,&ldquo;tv&rdquo;:-1,&ldquo;csrf_token&rdquo;:&quot;&quot;}</p>
+</blockquote>
+<p>lv,tv这几个参数暂时不知道作用是什么，有兴趣的可以自己研究研究。</p>
+<p>url: <a href="https://music.163.com/weapi/song/lyric">https://music.163.com/weapi/song/lyric</a>
+method: POST
+query: csrf_token
+params: ID(int), lv(int), lv(int), csrf_token(string)</p>
+<h3 id="3获取播放列表-">3.获取播放列表</h3>
+<p>在网页打开播放列表得到的列表详情是在后端处理过直接返回给浏览器的，没有暴露接口，但是通过官方提供的iframe插件可以得到一个接口，例如这个歌单：https://music.163.com/outchain/player?type=0&amp;id=2821194580&amp;auto=1&amp;height=430 ，加密方式跟上文一样：</p>
+<p>example:</p>
+<blockquote>
+<p>{&ldquo;id&rdquo;:&ldquo;2821194580&rdquo;,&ldquo;ids&rdquo;:&quot;[&quot;2821194580&quot;]&rdquo;,&ldquo;limit&rdquo;:10000,&ldquo;offset&rdquo;:0,&ldquo;csrf_token&rdquo;:&quot;&quot;}</p>
+</blockquote>
+<p>id参数是必须的，ids参数的作用暂时不知道是什么。但是这个接口目前好像没办法正常使用，limit和offset设置是无效的，一次最多获取1000条歌曲数据，而且也无法获取订阅状态，还需要再研究研究。</p>
+<p>url: <a href="https://music.163.com/weapi/playlist/detail">https://music.163.com/weapi/playlist/detail</a>
+method: POST
+params: id(int), ids(array), limit(int), offset(int), csrf_token(string)</p>
+<h3 id="4搜索-">4.搜索</h3>
+<h4 id="41-推荐-">4.1 推荐</h4>
+<p>example：</p>
+<blockquote>
+<p>{&ldquo;s&rdquo;:&ldquo;陈奕迅&rdquo;,&ldquo;limit&rdquo;:&ldquo;8&rdquo;,&ldquo;csrf_token&rdquo;:&quot;&quot;}</p>
+</blockquote>
+<p>url: <a href="https://music.163.com/weapi/cloudsearch/get/web">https://music.163.com/weapi/cloudsearch/get/web</a>
+method: POST
+query: csrf_token
+params: s(string), limit(int), csrf_token(string)</p>
+<h4 id="42-各种搜索-">4.2 各种搜索</h4>
+<p>example:</p>
+<blockquote>
+<p>{&ldquo;hlpretag&rdquo;:&ldquo;&lt;span class=&quot;s-fc7&quot;&gt;&rdquo;,&ldquo;hlposttag&rdquo;:&ldquo;</span>&rdquo;,&ldquo;s&rdquo;:&ldquo;陈奕迅&rdquo;,&ldquo;type&rdquo;:&ldquo;1&rdquo;,&ldquo;offset&rdquo;:&ldquo;0&rdquo;,&ldquo;total&rdquo;:&ldquo;true&rdquo;,&ldquo;limit&rdquo;:&ldquo;30&rdquo;,&ldquo;csrf_token&rdquo;:&quot;&quot;}</p>
+</blockquote>
+<p>前面hlpretag和hlposttag暂时不知道作用是什么，可以不加进去，如果要加进去加密的时候记得要把转义符号也当成字符串的一部分，在python中可以在字符串前面加r表示raw string。
+其中type是搜索的类型：
+1 歌曲
+10 专辑
+100 歌手
+1000 歌单
+1002 用户
+1006 歌词
+1009 电台
+1014 视频
+其他的参数比较明显就不细说了。</p>
+<p>url: <a href="https://music.163.com/weapi/cloudsearch/get/web">https://music.163.com/weapi/cloudsearch/get/web</a>
+method: POST
+query: csrf_token
+params: s(string), type(int), offset(int), total(int), limit(int), csrf_token(string)</p>
+<h3 id="5用户token-">5.用户Token</h3>
+<p>先分析怎么通过手机登录获取token。
+这个稍微复杂点，因为传递给服务器的参数中password是经过加密的，只要找出加密的方法就可以了。首先还是找到跟加密password相关的函数，这个断点多花点时间是可以找出来的。</p>
+<p>在pt_frame_index.js这个文件里面发现如下代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">i9b</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">countrycode</span><span class="o">:</span> <span class="nx">gX3x</span><span class="p">.</span><span class="nx">countrycode</span><span class="p">,</span>
+    <span class="nx">phone</span><span class="o">:</span><span class="nx">gX3x</span><span class="p">.</span><span class="nx">mobile</span><span class="p">,</span>
+    <span class="nx">password</span><span class="o">:</span><span class="nx">k9b</span><span class="p">.</span><span class="nx">lB4F</span><span class="p">(</span><span class="nx">gX3x</span><span class="p">.</span><span class="nx">password</span><span class="p">),</span>
+    <span class="nx">rememberLogin</span><span class="o">:</span><span class="k">this</span><span class="p">.</span><span class="nx">RU4Y</span><span class="p">.</span><span class="nx">checked</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>其中lB4F这个函数就是加密password的函数，接着找到：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">p</span><span class="p">.</span><span class="nx">lB4F</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">i9b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">XC6w</span><span class="p">(</span><span class="nx">LI2x</span><span class="p">(</span><span class="nx">xC8u</span><span class="p">(</span><span class="nx">i9b</span><span class="p">,</span> <span class="o">!</span><span class="mi">0</span><span class="p">),</span> <span class="nx">i9b</span><span class="p">.</span><span class="nx">length</span> <span class="o">*</span> <span class="nx">nA5F</span><span class="p">),</span> <span class="o">!</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">nA5F</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">xC8u</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">GB0x</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">i</span> <span class="o">%</span> <span class="mi">32</span>
+    <span class="p">},</span>
+    <span class="nx">Gx0x</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">32</span> <span class="o">-</span> <span class="nx">nA5F</span> <span class="o">-</span> <span class="nx">i</span> <span class="o">%</span> <span class="mi">32</span>
+    <span class="p">};</span>
+    <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">cQ2x</span><span class="p">,</span> <span class="nx">Gw0x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">Xr6l</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">lI4M</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="nx">nA5F</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">mE5J</span> <span class="o">=</span> <span class="nx">Gw0x</span> <span class="o">?</span> <span class="nx">GB0x</span><span class="o">:</span> <span class="nx">Gx0x</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">l</span> <span class="o">=</span> <span class="nx">cQ2x</span><span class="p">.</span><span class="nx">length</span> <span class="o">*</span> <span class="nx">nA5F</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="nx">nA5F</span><span class="p">)</span> <span class="nx">Xr6l</span><span class="p">[</span><span class="nx">i</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">]</span> <span class="o">|=</span> <span class="p">(</span><span class="nx">cQ2x</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span> <span class="o">/</span> <span class="nx">nA5F</span><span class="p">)</span> <span class="o">&amp;</span> <span class="nx">lI4M</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="nx">mE5J</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">Xr6l</span>
+    <span class="p">}</span>
+<span class="p">}</span> <span class="p">();</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">LI2x</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">x</span><span class="p">[</span><span class="nx">y</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">]</span> <span class="o">|=</span> <span class="mi">128</span> <span class="o">&lt;&lt;</span> <span class="nx">y</span> <span class="o">%</span> <span class="mi">32</span><span class="p">;</span>
+    <span class="nx">x</span><span class="p">[(</span><span class="nx">y</span> <span class="o">+</span> <span class="mi">64</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">9</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="mi">1732584193</span><span class="p">,</span>
+    <span class="nx">b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">271733879</span><span class="p">,</span>
+    <span class="nx">c</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1732584194</span><span class="p">,</span>
+    <span class="nx">d</span> <span class="o">=</span> <span class="mi">271733878</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">l</span> <span class="o">=</span> <span class="nx">x</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+    <span class="nx">bFW5b</span><span class="p">,</span> <span class="nx">bFX5c</span><span class="p">,</span> <span class="nx">bGc5h</span><span class="p">,</span> <span class="nx">bGd5i</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">16</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">bFW5b</span> <span class="o">=</span> <span class="nx">a</span><span class="p">;</span>
+        <span class="nx">bFX5c</span> <span class="o">=</span> <span class="nx">b</span><span class="p">;</span>
+        <span class="nx">bGc5h</span> <span class="o">=</span> <span class="nx">c</span><span class="p">;</span>
+        <span class="nx">bGd5i</span> <span class="o">=</span> <span class="nx">d</span><span class="p">;</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">7</span><span class="p">,</span> <span class="o">-</span><span class="mi">680876936</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">12</span><span class="p">,</span> <span class="o">-</span><span class="mi">389564586</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">606105819</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">22</span><span class="p">,</span> <span class="o">-</span><span class="mi">1044525330</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">4</span><span class="p">],</span> <span class="mi">7</span><span class="p">,</span> <span class="o">-</span><span class="mi">176418897</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">5</span><span class="p">],</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">1200080426</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">6</span><span class="p">],</span> <span class="mi">17</span><span class="p">,</span> <span class="o">-</span><span class="mi">1473231341</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">7</span><span class="p">],</span> <span class="mi">22</span><span class="p">,</span> <span class="o">-</span><span class="mi">45705983</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">8</span><span class="p">],</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1770035416</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">9</span><span class="p">],</span> <span class="mi">12</span><span class="p">,</span> <span class="o">-</span><span class="mi">1958414417</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">10</span><span class="p">],</span> <span class="mi">17</span><span class="p">,</span> <span class="o">-</span><span class="mi">42063</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">11</span><span class="p">],</span> <span class="mi">22</span><span class="p">,</span> <span class="o">-</span><span class="mi">1990404162</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">12</span><span class="p">],</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1804603682</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">13</span><span class="p">],</span> <span class="mi">12</span><span class="p">,</span> <span class="o">-</span><span class="mi">40341101</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">14</span><span class="p">],</span> <span class="mi">17</span><span class="p">,</span> <span class="o">-</span><span class="mi">1502002290</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">qb5g</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">15</span><span class="p">],</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">1236535329</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">165796510</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">6</span><span class="p">],</span> <span class="mi">9</span><span class="p">,</span> <span class="o">-</span><span class="mi">1069501632</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">11</span><span class="p">],</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">643717713</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">20</span><span class="p">,</span> <span class="o">-</span><span class="mi">373897302</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">5</span><span class="p">],</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">701558691</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">10</span><span class="p">],</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">38016083</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">15</span><span class="p">],</span> <span class="mi">14</span><span class="p">,</span> <span class="o">-</span><span class="mi">660478335</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">4</span><span class="p">],</span> <span class="mi">20</span><span class="p">,</span> <span class="o">-</span><span class="mi">405537848</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">9</span><span class="p">],</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">568446438</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">14</span><span class="p">],</span> <span class="mi">9</span><span class="p">,</span> <span class="o">-</span><span class="mi">1019803690</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">14</span><span class="p">,</span> <span class="o">-</span><span class="mi">187363961</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">8</span><span class="p">],</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1163531501</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">13</span><span class="p">],</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1444681467</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">9</span><span class="p">,</span> <span class="o">-</span><span class="mi">51403784</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">7</span><span class="p">],</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">1735328473</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">pT5Y</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">12</span><span class="p">],</span> <span class="mi">20</span><span class="p">,</span> <span class="o">-</span><span class="mi">1926607734</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">5</span><span class="p">],</span> <span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">378558</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">8</span><span class="p">],</span> <span class="mi">11</span><span class="p">,</span> <span class="o">-</span><span class="mi">2022574463</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">11</span><span class="p">],</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1839030562</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">14</span><span class="p">],</span> <span class="mi">23</span><span class="p">,</span> <span class="o">-</span><span class="mi">35309556</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">1530992060</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">4</span><span class="p">],</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">1272893353</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">7</span><span class="p">],</span> <span class="mi">16</span><span class="p">,</span> <span class="o">-</span><span class="mi">155497632</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">10</span><span class="p">],</span> <span class="mi">23</span><span class="p">,</span> <span class="o">-</span><span class="mi">1094730640</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">13</span><span class="p">],</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">681279174</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">11</span><span class="p">,</span> <span class="o">-</span><span class="mi">358537222</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">16</span><span class="p">,</span> <span class="o">-</span><span class="mi">722521979</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">6</span><span class="p">],</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">76029189</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">9</span><span class="p">],</span> <span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">640364487</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">12</span><span class="p">],</span> <span class="mi">11</span><span class="p">,</span> <span class="o">-</span><span class="mi">421815835</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">15</span><span class="p">],</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">530742520</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">pQ5V</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">23</span><span class="p">,</span> <span class="o">-</span><span class="mi">995338651</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">198630844</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">7</span><span class="p">],</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1126891415</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">14</span><span class="p">],</span> <span class="mi">15</span><span class="p">,</span> <span class="o">-</span><span class="mi">1416354905</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">5</span><span class="p">],</span> <span class="mi">21</span><span class="p">,</span> <span class="o">-</span><span class="mi">57434055</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">12</span><span class="p">],</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1700485571</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">1894986606</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">10</span><span class="p">],</span> <span class="mi">15</span><span class="p">,</span> <span class="o">-</span><span class="mi">1051523</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">21</span><span class="p">,</span> <span class="o">-</span><span class="mi">2054922799</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">8</span><span class="p">],</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1873313359</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">15</span><span class="p">],</span> <span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">30611744</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">6</span><span class="p">],</span> <span class="mi">15</span><span class="p">,</span> <span class="o">-</span><span class="mi">1560198380</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">13</span><span class="p">],</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">1309151649</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">4</span><span class="p">],</span> <span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">145523070</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">11</span><span class="p">],</span> <span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">1120210379</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">718787259</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">pA5F</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">9</span><span class="p">],</span> <span class="mi">21</span><span class="p">,</span> <span class="o">-</span><span class="mi">343485551</span><span class="p">);</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">mG5L</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">bFW5b</span><span class="p">);</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nx">mG5L</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">bFX5c</span><span class="p">);</span>
+        <span class="nx">c</span> <span class="o">=</span> <span class="nx">mG5L</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">bGc5h</span><span class="p">);</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">mG5L</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">bGd5i</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">]</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">mG5L</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">bFc4g</span> <span class="o">=</span> <span class="p">(</span><span class="nx">x</span> <span class="o">&amp;</span> <span class="mi">65535</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="nx">y</span> <span class="o">&amp;</span> <span class="mi">65535</span><span class="p">),</span>
+    <span class="nx">cwl5q</span> <span class="o">=</span> <span class="p">(</span><span class="nx">x</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="nx">y</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="nx">bFc4g</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">cwl5q</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span> <span class="o">|</span> <span class="nx">bFc4g</span> <span class="o">&amp;</span> <span class="mi">65535</span>
+<span class="p">};</span>
+<span class="kd">var</span> <span class="nx">bem8e</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">q</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">mG5L</span><span class="p">(</span><span class="nx">beu8m</span><span class="p">(</span><span class="nx">mG5L</span><span class="p">(</span><span class="nx">mG5L</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">q</span><span class="p">),</span> <span class="nx">mG5L</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">t</span><span class="p">)),</span> <span class="nx">s</span><span class="p">),</span> <span class="nx">b</span><span class="p">)</span>
+<span class="p">};</span>
+<span class="kd">var</span> <span class="nx">qb5g</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">bem8e</span><span class="p">(</span><span class="nx">b</span> <span class="o">&amp;</span> <span class="nx">c</span> <span class="o">|</span> <span class="o">~</span><span class="nx">b</span> <span class="o">&amp;</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span>
+<span class="p">};</span>
+<span class="kd">var</span> <span class="nx">pT5Y</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">bem8e</span><span class="p">(</span><span class="nx">b</span> <span class="o">&amp;</span> <span class="nx">d</span> <span class="o">|</span> <span class="nx">c</span> <span class="o">&amp;</span> <span class="o">~</span><span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span>
+<span class="p">};</span>
+<span class="kd">var</span> <span class="nx">pQ5V</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">bem8e</span><span class="p">(</span><span class="nx">b</span> <span class="o">^</span> <span class="nx">c</span> <span class="o">^</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span>
+<span class="p">};</span>
+<span class="kd">var</span> <span class="nx">pA5F</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">bem8e</span><span class="p">(</span><span class="nx">c</span> <span class="o">^</span> <span class="p">(</span><span class="nx">b</span> <span class="o">|</span> <span class="o">~</span><span class="nx">d</span><span class="p">),</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">XC6w</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">bFG5L</span> <span class="o">=</span> <span class="s2">&#34;0123456789abcdef&#34;</span><span class="p">,</span>
+    <span class="nx">GB0x</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">i</span> <span class="o">%</span> <span class="mi">4</span>
+    <span class="p">},</span>
+    <span class="nx">Gx0x</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">3</span> <span class="o">-</span> <span class="nx">i</span> <span class="o">%</span> <span class="mi">4</span>
+    <span class="p">};</span>
+    <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">iL3x</span><span class="p">,</span> <span class="nx">Gw0x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">bu0x</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">mE5J</span> <span class="o">=</span> <span class="nx">Gw0x</span> <span class="o">?</span> <span class="nx">GB0x</span><span class="o">:</span> <span class="nx">Gx0x</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">l</span> <span class="o">=</span> <span class="nx">iL3x</span><span class="p">.</span><span class="nx">length</span> <span class="o">*</span> <span class="mi">4</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">bu0x</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">bFG5L</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">iL3x</span><span class="p">[</span><span class="nx">i</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="nx">mE5J</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span> <span class="o">+</span> <span class="nx">bFG5L</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">iL3x</span><span class="p">[</span><span class="nx">i</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="nx">mE5J</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">))</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">bu0x</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span> <span class="p">();</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>看起来眼花缭乱，但是我们并不需要知道各个函数的作用，直接用python的语法转换一下。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2019-06-07</span>
+            </div>
+            <div class="post-info-license"><span>转载请注明出处</span></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5api%E5%88%86%E6%9E%90/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://sparse.codes/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5api%E5%88%86%E6%9E%90/" data-title="网易云音乐网页API分析" data-hashtags="Python,爬虫"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://sparse.codes/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5api%E5%88%86%E6%9E%90/" data-hashtag="Python"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://sparse.codes/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5api%E5%88%86%E6%9E%90/" data-title="网易云音乐网页API分析"><i class="fab fa-hacker-news fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://sparse.codes/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5api%E5%88%86%E6%9E%90/" data-title="网易云音乐网页API分析"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/line.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://sparse.codes/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5api%E5%88%86%E6%9E%90/" data-title="网易云音乐网页API分析" data-ralateuid="xxxx"><i class="fab fa-weibo fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/python/">Python</a>,&nbsp;<a href="/tags/%E7%88%AC%E8%99%AB/">爬虫</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/go%E8%AF%AD%E8%A8%80%E7%BC%96%E5%86%99telegram%E8%AF%84%E8%AE%BA%E6%9C%BA%E5%99%A8%E4%BA%BA/" class="prev" rel="prev" title="Go语言编写Telegram评论机器人"><i class="fas fa-angle-left fa-fw"></i>Go语言编写Telegram评论机器人</a>
+            <a href="/codeforces-round-582-div3/" class="next" rel="next" title="Codeforces Round 582 (Div 3)">Codeforces Round 582 (Div 3)<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.72.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">muffin</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery.js@1.2.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/algoliasearch@4.2.0/dist/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery.js@1.2.0/dist/js/lightgallery.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lg-thumbnail.js@1.2.0/dist/lg-thumbnail.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lg-zoom.js@1.2.0/dist/lg-zoom.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.4.0/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{"valine":{"appId":"ifDUujDDTcuv5VuOMVUPsffk-MdYXbMMI","appKey":"DGF0tC3dEeoCgkNIr3p8jE0I","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://valine.sparse.codes","visitor":true}},"lightGallery":{"actualSize":false,"exThumbImage":"data-thumbnail","hideBarsDelay":2000,"selector":".lightgallery","speed":400,"thumbContHeight":80,"thumbWidth":80,"thumbnail":true},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"PASDMWALPK","algoliaIndex":"index.zh-cn","algoliaSearchKey":"b42948e51daaa93df92381c8e2ac0f93","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

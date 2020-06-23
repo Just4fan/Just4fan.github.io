@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>图神经网络 - Muffin&#39;s Blog</title><meta name="Description" content="关于 Muffin&#39;s Blog"><meta property="og:title" content="图神经网络" />
+<meta property="og:description" content="最近在看图神经网络的综述，数学功底太差看的云里雾里，记录一下学习过程中接触到的一些概念和自己的理解。 0 简介 图像、语音、文本等都可以表示为欧几" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sparse.codes/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" />
+<meta property="og:image" content="https://sparse.codes/logo.png"/>
+<meta property="article:published_time" content="2020-06-23T16:18:05+08:00" />
+<meta property="article:modified_time" content="2020-06-23T16:18:05+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://sparse.codes/logo.png"/>
+
+<meta name="twitter:title" content="图神经网络"/>
+<meta name="twitter:description" content="最近在看图神经网络的综述，数学功底太差看的云里雾里，记录一下学习过程中接触到的一些概念和自己的理解。 0 简介 图像、语音、文本等都可以表示为欧几"/>
+<meta name="application-name" content="Muffin&#39;s Blog">
+<meta name="apple-mobile-web-app-title" content="Muffin&#39;s Blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://sparse.codes/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" /><link rel="prev" href="https://sparse.codes/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "图神经网络",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/sparse.codes\/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C\/"
+        },"image": ["https:\/\/sparse.codes\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "图神经网络, 机器学习, 深度学习","wordcount":  1677 ,
+        "url": "https:\/\/sparse.codes\/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C\/","datePublished": "2020-06-23T16:18:05+08:00","dateModified": "2020-06-23T16:18:05+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "xxxx","logo": "https:\/\/sparse.codes\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "muffin"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Muffin&#39;s Blog"><span class="header-title-pre"><i class='fa fa-code fa-fw'></i></span>Muffin&#39;s Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><a class="menu-item" href="https://github.com/muffin1998" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Muffin&#39;s Blog"><span class="header-title-pre"><i class='fa fa-code fa-fw'></i></span>Muffin&#39;s Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a class="menu-item" href="https://github.com/muffin1998" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">图神经网络</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>muffin</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-06-23">2020-06-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1677 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;<span id="/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" class="leancloud_visitors" data-flag-title="图神经网络">
+                        <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#0-简介">0 简介</a></li>
+    <li><a href="#1-图神经网络">1 图神经网络</a>
+      <ul>
+        <li><a href="#11-巴拿赫不动点定理">1.1 巴拿赫不动点定理</a></li>
+        <li><a href="#12-模型细节">1.2 模型细节</a></li>
+        <li><a href="#13-训练过程">1.3 训练过程</a></li>
+        <li><a href="#14-模型的局限">1.4 模型的局限</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-图神经网络的变种">2 图神经网络的变种</a>
+      <ul>
+        <li><a href="#21-门控图神经网络gated-graph-neural-networks">2.1 门控图神经网络(Gated Graph Neural Networks)</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>最近在看图神经网络的综述，数学功底太差看的云里雾里，记录一下学习过程中接触到的一些概念和自己的理解。</p>
+<h2 id="0-简介">0 简介</h2>
+<p>图像、语音、文本等都可以表示为欧几里得结构数据，传统的神经网络如CNN、RNN在处理这些欧几里得结构数据上取得了不错的效果。关于欧几里得数据和非欧几里得数据，引用论文 <a href="https://arxiv.org/abs/1611.08097" target="_blank" rel="noopener noreffer">Geometric deep learning: going beyond Euclidean data</a> 中的一段话：</p>
+<blockquote>
+<p><code>Many scientific fields study data with an underlying structure that is a non-Euclidean space.</code> Some examples include social networks in computational social sciences, sensor networks in communications, functional networks in brain imaging, regulatory networks in genetics, and meshed surfaces in computer graphics. In many applications, such geometric data are large and complex (in the case of social networks, on the scale of billions), and are natural targets for machine learning techniques. In particular, we would like to use deep neural networks, which have recently proven to be powerful tools for a broad range of problems from computer vision, natural language processing, and audio analysis. <code>However, these tools have been most successful on data with an underlying Euclidean or grid-like structure, and in cases where the invariances of these structures are built into networks used to model them.</code></p>
+</blockquote>
+<blockquote>
+<p>In image analysis applications, one can consider  images as functions on the Euclidean space (plane),  sampled on a grid.</p>
+</blockquote>
+<p>原文把非欧几里得数据定义为数据潜在的结构是非欧空间的。以图像为例，我们可以看做一个欧氏平面（二维），在一个网格上采样得到图像的数据。（个人认为其实就是数据以什么方式表示的问题）</p>
+<p>显然社交网络、知识图谱一类的图数据没办法直接用传统的神经网络处理，因此我们可以通过图嵌入(Graph Embedding)获得结点、结构等信息的向量表示，再应用到传统的机器学习方法上，而图神经网络相当于直接在图数据上进行学习，完成各种任务。图嵌入和图神经网络是密切相关也是非常相似的两个领域。</p>
+<p>CNN: Extract Spatial Features</p>
+<h2 id="1-图神经网络">1 图神经网络</h2>
+<p>图神经网络(Graph Neural Networks, GNN)最早在<a href="https://ieeexplore.ieee.org/document/1555942" target="_blank" rel="noopener noreffer">A new model for learning in graph domains(2005年)</a>提出，相关的工作还有<a href="https://ieeexplore.ieee.org/document/4700287" target="_blank" rel="noopener noreffer">The Graph Neural Network Model(2009年)</a>，基本的思想是通过邻居结点间传播信息，获得图或结点的表示，这里介绍的图神经网络使用前馈神经网络聚合邻居结点的信息，根据……</p>
+<h3 id="11-巴拿赫不动点定理">1.1 巴拿赫不动点定理</h3>
+<p>巴拿赫不动点定理又称压缩映射定理。</p>
+<p>令 $(X, d)$ 为非空的完备度量空间，若映射 $f:X \rightarrow X$ 满足 $\forall x, y \in X, d(x, y) \le \lambda d(T(x), T(y))$ ，则称 $f$ 是一个压缩映射。</p>
+<p>巴拿赫不动点定理是指在完备度量空间中 $(X, d)$ ，设 $f:X \rightarrow X$ 是一个压缩映射，则$f$在$X$中存在唯一不动点，对于 $\forall x \in X$ ,序列 $x, f(x), f(f(x)) &hellip;$ 收敛至 $f$ 的不动点。</p>
+<h3 id="12-模型细节">1.2 模型细节</h3>
+<p>GNN定义两个函数：$f$ 是局部转移函数(local transaction function)，用于整合自身结点、邻居结点以及边的信息：</p>
+<p>$$ h_v = f(x_v, x_{co[v]}, h_{ne[v]}, x_{ne[v]}) \tag{1.1} $$</p>
+<p>其中 $h_v, x_v, x_{co[v]}, h_{ne[v]}, x_{ne[v]}$ 分别代表结点v的状态，结点v的特征，结点v的边的特征，邻居结点的状态，邻居结点的特征。</p>
+<p>$g$ 是局部输出函数(local output function)：</p>
+<p>$$ o_v = g(x_v, h_v) \tag{1.2} $$</p>
+<p>$f$ 和 $g$都可以看做一个前馈神经网络，对于每个结点都是共享的，同时还要限制函数 $f$ 为压缩映射。</p>
+<p>上面是每个结点状态和输出的函数，现在根据整个图整合成更紧凑的表达形式：</p>
+<p>$$ H = F(H, X) \tag{1.3} $$
+$$ O = G(H, X_v) \tag{1.4} $$</p>
+<p>$H, X_v$ 分别由所有结点的状态，所有结点的特征堆叠而成。</p>
+<p>注： $H^{(t)} = F(H^{(t-1)}, X)$ ， $F$ 是关于 $H$ 的压缩映射。在计算所有结点的状态 $H^{(t-1)}$ 后，每个结点 $v$ 的邻居结点 $ne[v]$ 也接收到了其邻居结点的信息，因此不断迭代计算 $H^{(t)}, H^{(t+1)} &hellip;$可以接收到更远的结点的信息，不动点定理实际上保证了解的存在（不至于无穷无尽的迭代下去）。</p>
+<p>最后是损失函数的部分。假设图中 $p$ 个结点拥有监督信息，则损失函数的形式为：</p>
+<p>$$ loss = \sum_{i=1}^{p} (t_i - o_i) \tag{1.5} $$</p>
+<h3 id="13-训练过程">1.3 训练过程</h3>
+<p>注意训练过程每个step都需要初始化每个结点的状态 $h_v$ 。</p>
+<ol>
+<li>初始化H(0), 迭代计算$H^{(t)} = F(H^{(t-1)}, X)$直至稳定，计算loss</li>
+<li>根据loss计算梯度，更新参数</li>
+<li>重复1、2直至收敛</li>
+</ol>
+<p>关于梯度的计算可以参考原论文 <a href="https://ieeexplore.ieee.org/document/4700287" target="_blank" rel="noopener noreffer">The Graph Neural Network Model</a></p>
+<h3 id="14-模型的局限">1.4 模型的局限</h3>
+<ol>
+<li>显然，基于不动点定理会使结点的状态比较相似，即Over Smooth，对于node-focused任务效果可能比较差</li>
+<li>结点状态迭代的效率问题</li>
+<li>部分边的信息无法被很好的建模，比如边的类型</li>
+</ol>
+<h2 id="2-图神经网络的变种">2 图神经网络的变种</h2>
+<h3 id="21-门控图神经网络gated-graph-neural-networks">2.1 门控图神经网络(Gated Graph Neural Networks)</h3>
+<p>GG-NN整体结构和GNN比较相似，最大的区别在于局部转移函数使用门控循环单元(GRU)代替，而GNN中局部转移函数是普通的前馈神经网络(FNN)，并且状态的转移不再依赖于不动点定理，而是迭代固定的次数 $T$</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://www.cnblogs.com/SivilTaram/p/graph_neural_network_1.html" target="_blank" rel="noopener noreffer">[1]. 从图(Graph)到图卷积(Graph Convolution)：漫谈图神经网络模型 (一)</a></p>
+<p><a href="https://arxiv.org/abs/1901.00596" target="_blank" rel="noopener noreffer">[2]. A Comprehensive Survey on Graph Neural Networks</a></p>
+<p><a href="https://arxiv.org/abs/1611.08097" target="_blank" rel="noopener noreffer">[3]. Geometric deep learning: going beyond Euclidean data</a></p>
+<p><a href="https://arxiv.org/abs/1812.08434" target="_blank" rel="noopener noreffer">[4]. Graph Neural Networks: A Review of Methods and Applications</a></p>
+<p><a href="https://ieeexplore.ieee.org/document/4700287" target="_blank" rel="noopener noreffer">[5]. The Graph Neural Network Model</a></p>
+<p><a href="https://arxiv.org/abs/1511.05493" target="_blank" rel="noopener noreffer">[6]. Gated Graph Sequence Neural Networks</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-06-23</span>
+            </div>
+            <div class="post-info-license"><span>转载请注明出处</span></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://sparse.codes/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" data-title="图神经网络" data-hashtags="图神经网络,机器学习,深度学习"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://sparse.codes/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" data-hashtag="图神经网络"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://sparse.codes/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" data-title="图神经网络"><i class="fab fa-hacker-news fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://sparse.codes/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" data-title="图神经网络"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/line.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://sparse.codes/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" data-title="图神经网络" data-ralateuid="xxxx"><i class="fab fa-weibo fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">图神经网络</a>,&nbsp;<a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>,&nbsp;<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/" class="prev" rel="prev" title="Beta分布和共轭先验"><i class="fas fa-angle-left fa-fw"></i>Beta分布和共轭先验</a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.72.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">muffin</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery.js@1.2.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/algoliasearch@4.2.0/dist/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery.js@1.2.0/dist/js/lightgallery.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lg-thumbnail.js@1.2.0/dist/lg-thumbnail.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lg-zoom.js@1.2.0/dist/lg-zoom.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.4.0/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{"valine":{"appId":"ifDUujDDTcuv5VuOMVUPsffk-MdYXbMMI","appKey":"DGF0tC3dEeoCgkNIr3p8jE0I","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://valine.sparse.codes","visitor":true}},"lightGallery":{"actualSize":false,"exThumbImage":"data-thumbnail","hideBarsDelay":2000,"selector":".lightgallery","speed":400,"thumbContHeight":80,"thumbWidth":80,"thumbnail":true},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"PASDMWALPK","algoliaIndex":"index.zh-cn","algoliaSearchKey":"b42948e51daaa93df92381c8e2ac0f93","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

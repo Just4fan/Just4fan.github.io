@@ -1,0 +1,56 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>所有文章 - Muffin&#39;s Blog</title>
+        <link>https://sparse.codes/posts/</link>
+        <description>所有文章 | Muffin&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 23 Jun 2020 16:18:05 &#43;0800</lastBuildDate><atom:link href="https://sparse.codes/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>图神经网络</title>
+    <link>https://sparse.codes/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</link>
+    <pubDate>Tue, 23 Jun 2020 16:18:05 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://sparse.codes/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</guid>
+    <description><![CDATA[最近在看图神经网络的综述，数学功底太差看的云里雾里，记录一下学习过程中接触到的一些概念和自己的理解。 0 简介 图像、语音、文本等都可以表示为欧几]]></description>
+</item><item>
+    <title>Beta分布和共轭先验</title>
+    <link>https://sparse.codes/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/</link>
+    <pubDate>Wed, 11 Sep 2019 19:22:53 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://sparse.codes/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/</guid>
+    <description><![CDATA[初识Beta分布 LDA-math-认识Beta/Dirichlet分布(1) 如何通俗的理解Beta分布]]></description>
+</item><item>
+    <title>Codeforces Round 582 (Div 3)</title>
+    <link>https://sparse.codes/codeforces-round-582-div3/</link>
+    <pubDate>Thu, 05 Sep 2019 10:11:12 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://sparse.codes/codeforces-round-582-div3/</guid>
+    <description><![CDATA[题目链接 A. Chips Moving 题目大意：对一个序列的每一个元素进行±1或±2的操作，其中±2的操作不计算代价，求最小代价使序列的每一个元素都相同。 思路： 求奇]]></description>
+</item><item>
+    <title>网易云音乐网页API分析</title>
+    <link>https://sparse.codes/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5api%E5%88%86%E6%9E%90/</link>
+    <pubDate>Sun, 02 Jun 2019 11:07:45 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://sparse.codes/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5api%E5%88%86%E6%9E%90/</guid>
+    <description><![CDATA[先随便选一个接口分析一下，就选评论接口吧。 1.获取评论 进入Chrome开发者模式可以看到 这个就是获取评论的接口，请求方式是POST，请求体有]]></description>
+</item><item>
+    <title>Go语言编写Telegram评论机器人</title>
+    <link>https://sparse.codes/go%E8%AF%AD%E8%A8%80%E7%BC%96%E5%86%99telegram%E8%AF%84%E8%AE%BA%E6%9C%BA%E5%99%A8%E4%BA%BA/</link>
+    <pubDate>Fri, 24 May 2019 13:43:47 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://sparse.codes/go%E8%AF%AD%E8%A8%80%E7%BC%96%E5%86%99telegram%E8%AF%84%E8%AE%BA%E6%9C%BA%E5%99%A8%E4%BA%BA/</guid>
+    <description><![CDATA[2019.06.01更新 新增几个命令： /reload 重新加载功能异常的评论区 /recover 恢复被误删的评论区 /enable 手动开启评论区 增加的内容放在dev分支 计划更新： 黑名单]]></description>
+</item><item>
+    <title>几道题目</title>
+    <link>https://sparse.codes/%E5%87%A0%E9%81%93%E9%A2%98%E7%9B%AE/</link>
+    <pubDate>Fri, 17 May 2019 20:31:12 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://sparse.codes/%E5%87%A0%E9%81%93%E9%A2%98%E7%9B%AE/</guid>
+    <description><![CDATA[Codeforces 1153C(Round 551 Div2) Serval and Parenthesis Sequence 题目链接：http://codeforces.com/problemset/problem/1153/C 题目大意：给定一个由]]></description>
+</item><item>
+    <title>Codeforces 1154F(Round 552 Div3) - Shovels Shop</title>
+    <link>https://sparse.codes/codeforces-1154f-round-552-div3-shovels-shop/</link>
+    <pubDate>Tue, 14 May 2019 00:38:30 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://sparse.codes/codeforces-1154f-round-552-div3-shovels-shop/</guid>
+    <description><![CDATA[先填个坑~ 上次做div3的时候没有做出来，感觉好像不是一道特别难的题目 题目链接：http://codeforces.com/problems]]></description>
+</item></channel>
+</rss>

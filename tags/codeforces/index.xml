@@ -1,0 +1,28 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Codeforces - 标签 - Muffin&#39;s Blog</title>
+        <link>https://sparse.codes/tags/codeforces/</link>
+        <description>Codeforces - 标签 - Muffin&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 05 Sep 2019 10:11:12 &#43;0800</lastBuildDate><atom:link href="https://sparse.codes/tags/codeforces/" rel="self" type="application/rss+xml" /><item>
+    <title>Codeforces Round 582 (Div 3)</title>
+    <link>https://sparse.codes/codeforces-round-582-div3/</link>
+    <pubDate>Thu, 05 Sep 2019 10:11:12 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://sparse.codes/codeforces-round-582-div3/</guid>
+    <description><![CDATA[题目链接 A. Chips Moving 题目大意：对一个序列的每一个元素进行±1或±2的操作，其中±2的操作不计算代价，求最小代价使序列的每一个元素都相同。 思路： 求奇]]></description>
+</item><item>
+    <title>几道题目</title>
+    <link>https://sparse.codes/%E5%87%A0%E9%81%93%E9%A2%98%E7%9B%AE/</link>
+    <pubDate>Fri, 17 May 2019 20:31:12 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://sparse.codes/%E5%87%A0%E9%81%93%E9%A2%98%E7%9B%AE/</guid>
+    <description><![CDATA[Codeforces 1153C(Round 551 Div2) Serval and Parenthesis Sequence 题目链接：http://codeforces.com/problemset/problem/1153/C 题目大意：给定一个由]]></description>
+</item><item>
+    <title>Codeforces 1154F(Round 552 Div3) - Shovels Shop</title>
+    <link>https://sparse.codes/codeforces-1154f-round-552-div3-shovels-shop/</link>
+    <pubDate>Tue, 14 May 2019 00:38:30 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://sparse.codes/codeforces-1154f-round-552-div3-shovels-shop/</guid>
+    <description><![CDATA[先填个坑~ 上次做div3的时候没有做出来，感觉好像不是一道特别难的题目 题目链接：http://codeforces.com/problems]]></description>
+</item></channel>
+</rss>
