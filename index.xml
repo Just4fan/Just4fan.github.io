@@ -6,11 +6,11 @@
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 23 Jun 2020 16:18:05 &#43;0800</lastBuildDate>
             <atom:link href="https://sparse.codes/index.xml" rel="self" type="application/rss+xml" />
         <item>
-    <title>图神经网络</title>
-    <link>https://sparse.codes/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</link>
+    <title>图神经网络总结(一) —— 图神经网络</title>
+    <link>https://sparse.codes/gnn-summary-1-gnn/</link>
     <pubDate>Tue, 23 Jun 2020 16:18:05 &#43;0800</pubDate>
     <author>作者</author>
-    <guid>https://sparse.codes/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</guid>
+    <guid>https://sparse.codes/gnn-summary-1-gnn/</guid>
     <description><![CDATA[最近在看图神经网络的综述，数学功底太差看的云里雾里，记录一下学习过程中接触到的一些概念和自己的理解。 0 简介 图像、语音、文本等都可以表示为欧几]]></description>
 </item><item>
     <title>Beta分布和共轭先验</title>

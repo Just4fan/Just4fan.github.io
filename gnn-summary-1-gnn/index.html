@@ -5,32 +5,32 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-        <title>Beta分布和共轭先验 - Muffin&#39;s Blog</title><meta name="Description" content="关于 Muffin&#39;s Blog"><meta property="og:title" content="Beta分布和共轭先验" />
-<meta property="og:description" content="初识Beta分布 LDA-math-认识Beta/Dirichlet分布(1) 如何通俗的理解Beta分布" />
+        <title>图神经网络总结(一) —— 图神经网络 - Muffin&#39;s Blog</title><meta name="Description" content="关于 Muffin&#39;s Blog"><meta property="og:title" content="图神经网络总结(一) —— 图神经网络" />
+<meta property="og:description" content="最近在看图神经网络的综述，数学功底太差看的云里雾里，记录一下学习过程中接触到的一些概念和自己的理解。 0 简介 图像、语音、文本等都可以表示为欧几" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://sparse.codes/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/" />
+<meta property="og:url" content="https://sparse.codes/gnn-summary-1-gnn/" />
 <meta property="og:image" content="https://sparse.codes/logo.png"/>
-<meta property="article:published_time" content="2019-09-11T19:22:53+08:00" />
-<meta property="article:modified_time" content="2019-09-11T19:22:53+08:00" />
+<meta property="article:published_time" content="2020-06-23T16:18:05+08:00" />
+<meta property="article:modified_time" content="2020-06-23T16:18:05+08:00" />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://sparse.codes/logo.png"/>
 
-<meta name="twitter:title" content="Beta分布和共轭先验"/>
-<meta name="twitter:description" content="初识Beta分布 LDA-math-认识Beta/Dirichlet分布(1) 如何通俗的理解Beta分布"/>
+<meta name="twitter:title" content="图神经网络总结(一) —— 图神经网络"/>
+<meta name="twitter:description" content="最近在看图神经网络的综述，数学功底太差看的云里雾里，记录一下学习过程中接触到的一些概念和自己的理解。 0 简介 图像、语音、文本等都可以表示为欧几"/>
 <meta name="application-name" content="Muffin&#39;s Blog">
 <meta name="apple-mobile-web-app-title" content="Muffin&#39;s Blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://sparse.codes/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/" /><link rel="prev" href="https://sparse.codes/codeforces-round-582-div3/" /><link rel="next" href="https://sparse.codes/gnn-summary-1-gnn/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://sparse.codes/gnn-summary-1-gnn/" /><link rel="prev" href="https://sparse.codes/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        "headline": "Beta分布和共轭先验",
+        "headline": "图神经网络总结(一) —— 图神经网络",
         "inLanguage": "zh-CN",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https:\/\/sparse.codes\/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C\/"
-        },"image": ["https:\/\/sparse.codes\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "概率论, 机器学习","wordcount":  51 ,
-        "url": "https:\/\/sparse.codes\/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C\/","datePublished": "2019-09-11T19:22:53+08:00","dateModified": "2019-09-11T19:22:53+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@id": "https:\/\/sparse.codes\/gnn-summary-1-gnn\/"
+        },"image": ["https:\/\/sparse.codes\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "图神经网络, 机器学习, 深度学习","wordcount":  1677 ,
+        "url": "https:\/\/sparse.codes\/gnn-summary-1-gnn\/","datePublished": "2020-06-23T16:18:05+08:00","dateModified": "2020-06-23T16:18:05+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "xxxx","logo": "https:\/\/sparse.codes\/images\/avatar.png"},"author": {
                 "@type": "Person",
@@ -104,10 +104,10 @@
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">目录</h2>
             <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animated flipInX">Beta分布和共轭先验</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>muffin</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2019-09-11">2019-09-11</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 51 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 1 分钟&nbsp;<span id="/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/" class="leancloud_visitors" data-flag-title="Beta分布和共轭先验">
+        </div><article class="page single"><h1 class="single-title animated flipInX">图神经网络总结(一) —— 图神经网络</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>muffin</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%85%A5%E9%97%A8/"><i class="far fa-folder fa-fw"></i>“图神经网络入门”</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-06-23">2020-06-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1677 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;<span id="/gnn-summary-1-gnn/" class="leancloud_visitors" data-flag-title="图神经网络总结(一) —— 图神经网络">
                         <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
                     </span>&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
@@ -115,37 +115,107 @@
                     <span>目录</span>
                     <span><i class="details-icon fas fa-angle-right"></i></span>
                 </div>
-                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents"></nav></div>
-            </div><div class="content" id="content"><p><a href="https://blog.csdn.net/u014688145/article/details/54616377" target="_blank" rel="noopener noreffer">初识Beta分布</a></p>
-<p><a href="http://www.52nlp.cn/lda-math-%E8%AE%A4%E8%AF%86betadirichlet%E5%88%86%E5%B8%831" target="_blank" rel="noopener noreffer">LDA-math-认识Beta/Dirichlet分布(1)</a></p>
-<p><a href="https://www.zhihu.com/question/30269898/answer/570214874" target="_blank" rel="noopener noreffer">如何通俗的理解Beta分布</a></p>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#0-简介">0 简介</a></li>
+    <li><a href="#1-图神经网络">1 图神经网络</a>
+      <ul>
+        <li><a href="#11-巴拿赫不动点定理">1.1 巴拿赫不动点定理</a></li>
+        <li><a href="#12-模型细节">1.2 模型细节</a></li>
+        <li><a href="#13-训练过程">1.3 训练过程</a></li>
+        <li><a href="#14-模型的局限">1.4 模型的局限</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-图神经网络的变种">2 图神经网络的变种</a>
+      <ul>
+        <li><a href="#21-门控图神经网络gated-graph-neural-networks">2.1 门控图神经网络(Gated Graph Neural Networks)</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>最近在看图神经网络的综述，数学功底太差看的云里雾里，记录一下学习过程中接触到的一些概念和自己的理解。</p>
+<h2 id="0-简介">0 简介</h2>
+<p>图像、语音、文本等都可以表示为欧几里得结构数据，传统的神经网络如CNN、RNN在处理这些欧几里得结构数据上取得了不错的效果。关于欧几里得数据和非欧几里得数据，引用论文 <a href="https://arxiv.org/abs/1611.08097" target="_blank" rel="noopener noreffer">Geometric deep learning: going beyond Euclidean data</a> 中的一段话：</p>
+<blockquote>
+<p><code>Many scientific fields study data with an underlying structure that is a non-Euclidean space.</code> Some examples include social networks in computational social sciences, sensor networks in communications, functional networks in brain imaging, regulatory networks in genetics, and meshed surfaces in computer graphics. In many applications, such geometric data are large and complex (in the case of social networks, on the scale of billions), and are natural targets for machine learning techniques. In particular, we would like to use deep neural networks, which have recently proven to be powerful tools for a broad range of problems from computer vision, natural language processing, and audio analysis. <code>However, these tools have been most successful on data with an underlying Euclidean or grid-like structure, and in cases where the invariances of these structures are built into networks used to model them.</code></p>
+</blockquote>
+<blockquote>
+<p>In image analysis applications, one can consider  images as functions on the Euclidean space (plane),  sampled on a grid.</p>
+</blockquote>
+<p>原文把非欧几里得数据定义为数据潜在的结构是非欧空间的。以图像为例，我们可以看做一个欧氏平面（二维），在一个网格上采样得到图像的数据。（个人认为其实就是数据以什么方式表示的问题）</p>
+<p>显然社交网络、知识图谱一类的图数据没办法直接用传统的神经网络处理，因此我们可以通过图嵌入(Graph Embedding)获得结点、结构等信息的向量表示，再应用到传统的机器学习方法上，而图神经网络相当于直接在图数据上进行学习，完成各种任务。图嵌入和图神经网络是密切相关也是非常相似的两个领域。</p>
+<p>CNN: Extract Spatial Features</p>
+<h2 id="1-图神经网络">1 图神经网络</h2>
+<p>图神经网络(Graph Neural Networks, GNN)最早在<a href="https://ieeexplore.ieee.org/document/1555942" target="_blank" rel="noopener noreffer">A new model for learning in graph domains(2005年)</a>提出，相关的工作还有<a href="https://ieeexplore.ieee.org/document/4700287" target="_blank" rel="noopener noreffer">The Graph Neural Network Model(2009年)</a>，基本的思想是通过邻居结点间传播信息，获得图或结点的表示，这里介绍的图神经网络使用前馈神经网络聚合邻居结点的信息，根据……</p>
+<h3 id="11-巴拿赫不动点定理">1.1 巴拿赫不动点定理</h3>
+<p>巴拿赫不动点定理又称压缩映射定理。</p>
+<p>令 $(X, d)$ 为非空的完备度量空间，若映射 $f:X \rightarrow X$ 满足 $\forall x, y \in X, d(x, y) \le \lambda d(T(x), T(y))$ ，则称 $f$ 是一个压缩映射。</p>
+<p>巴拿赫不动点定理是指在完备度量空间中 $(X, d)$ ，设 $f:X \rightarrow X$ 是一个压缩映射，则$f$在$X$中存在唯一不动点，对于 $\forall x \in X$ ,序列 $x, f(x), f(f(x)) &hellip;$ 收敛至 $f$ 的不动点。</p>
+<h3 id="12-模型细节">1.2 模型细节</h3>
+<p>GNN定义两个函数：$f$ 是局部转移函数(local transaction function)，用于整合自身结点、邻居结点以及边的信息：</p>
+<p>$$ h_v = f(x_v, x_{co[v]}, h_{ne[v]}, x_{ne[v]}) \tag{1.1} $$</p>
+<p>其中 $h_v, x_v, x_{co[v]}, h_{ne[v]}, x_{ne[v]}$ 分别代表结点v的状态，结点v的特征，结点v的边的特征，邻居结点的状态，邻居结点的特征。</p>
+<p>$g$ 是局部输出函数(local output function)：</p>
+<p>$$ o_v = g(x_v, h_v) \tag{1.2} $$</p>
+<p>$f$ 和 $g$都可以看做一个前馈神经网络，对于每个结点都是共享的，同时还要限制函数 $f$ 为压缩映射。</p>
+<p>上面是每个结点状态和输出的函数，现在根据整个图整合成更紧凑的表达形式：</p>
+<p>$$ H = F(H, X) \tag{1.3} $$
+$$ O = G(H, X_v) \tag{1.4} $$</p>
+<p>$H, X_v$ 分别由所有结点的状态，所有结点的特征堆叠而成。</p>
+<p>注： $H^{(t)} = F(H^{(t-1)}, X)$ ， $F$ 是关于 $H$ 的压缩映射。在计算所有结点的状态 $H^{(t-1)}$ 后，每个结点 $v$ 的邻居结点 $ne[v]$ 也接收到了其邻居结点的信息，因此不断迭代计算 $H^{(t)}, H^{(t+1)} &hellip;$可以接收到更远的结点的信息，不动点定理实际上保证了解的存在（不至于无穷无尽的迭代下去）。</p>
+<p>最后是损失函数的部分。假设图中 $p$ 个结点拥有监督信息，则损失函数的形式为：</p>
+<p>$$ loss = \sum_{i=1}^{p} (t_i - o_i) \tag{1.5} $$</p>
+<h3 id="13-训练过程">1.3 训练过程</h3>
+<p>注意训练过程每个step都需要初始化每个结点的状态 $h_v$ 。</p>
+<ol>
+<li>初始化H(0), 迭代计算$H^{(t)} = F(H^{(t-1)}, X)$直至稳定，计算loss</li>
+<li>根据loss计算梯度，更新参数</li>
+<li>重复1、2直至收敛</li>
+</ol>
+<p>关于梯度的计算可以参考原论文 <a href="https://ieeexplore.ieee.org/document/4700287" target="_blank" rel="noopener noreffer">The Graph Neural Network Model</a></p>
+<h3 id="14-模型的局限">1.4 模型的局限</h3>
+<ol>
+<li>显然，基于不动点定理会使结点的状态比较相似，即Over Smooth，对于node-focused任务效果可能比较差</li>
+<li>结点状态迭代的效率问题</li>
+<li>部分边的信息无法被很好的建模，比如边的类型</li>
+</ol>
+<h2 id="2-图神经网络的变种">2 图神经网络的变种</h2>
+<h3 id="21-门控图神经网络gated-graph-neural-networks">2.1 门控图神经网络(Gated Graph Neural Networks)</h3>
+<p>GG-NN整体结构和GNN比较相似，最大的区别在于局部转移函数使用门控循环单元(GRU)代替，而GNN中局部转移函数是普通的前馈神经网络(FNN)，并且状态的转移不再依赖于不动点定理，而是迭代固定的次数 $T$</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://www.cnblogs.com/SivilTaram/p/graph_neural_network_1.html" target="_blank" rel="noopener noreffer">[1]. 从图(Graph)到图卷积(Graph Convolution)：漫谈图神经网络模型 (一)</a></p>
+<p><a href="https://arxiv.org/abs/1901.00596" target="_blank" rel="noopener noreffer">[2]. A Comprehensive Survey on Graph Neural Networks</a></p>
+<p><a href="https://arxiv.org/abs/1611.08097" target="_blank" rel="noopener noreffer">[3]. Geometric deep learning: going beyond Euclidean data</a></p>
+<p><a href="https://arxiv.org/abs/1812.08434" target="_blank" rel="noopener noreffer">[4]. Graph Neural Networks: A Review of Methods and Applications</a></p>
+<p><a href="https://ieeexplore.ieee.org/document/4700287" target="_blank" rel="noopener noreffer">[5]. The Graph Neural Network Model</a></p>
+<p><a href="https://arxiv.org/abs/1511.05493" target="_blank" rel="noopener noreffer">[6]. Gated Graph Sequence Neural Networks</a></p>
 </div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>更新于 2019-09-11</span>
+                <span>更新于 2020-06-23</span>
             </div>
             <div class="post-info-license"><span>转载请注明出处</span></div>
         </div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/index.md" target="_blank">阅读原始文档</a>
+                            <a class="link-to-markdown" href="/gnn-summary-1-gnn/index.md" target="_blank">阅读原始文档</a>
                         </span></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://sparse.codes/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/" data-title="Beta分布和共轭先验" data-hashtags="概率论,机器学习"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://sparse.codes/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/" data-hashtag="概率论"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://sparse.codes/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/" data-title="Beta分布和共轭先验"><i class="fab fa-hacker-news fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://sparse.codes/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/" data-title="Beta分布和共轭先验"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/line.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://sparse.codes/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/" data-title="Beta分布和共轭先验" data-ralateuid="xxxx"><i class="fab fa-weibo fa-fw"></i></a></span>
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://sparse.codes/gnn-summary-1-gnn/" data-title="图神经网络总结(一) —— 图神经网络" data-hashtags="图神经网络,机器学习,深度学习"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://sparse.codes/gnn-summary-1-gnn/" data-hashtag="图神经网络"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://sparse.codes/gnn-summary-1-gnn/" data-title="图神经网络总结(一) —— 图神经网络"><i class="fab fa-hacker-news fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://sparse.codes/gnn-summary-1-gnn/" data-title="图神经网络总结(一) —— 图神经网络"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/line.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://sparse.codes/gnn-summary-1-gnn/" data-title="图神经网络总结(一) —— 图神经网络" data-ralateuid="xxxx"><i class="fab fa-weibo fa-fw"></i></a></span>
             </div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/">概率论</a>,&nbsp;<a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></section>
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">图神经网络</a>,&nbsp;<a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>,&nbsp;<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></section>
         <section>
             <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
         </section>
     </div>
 
-    <div class="post-nav"><a href="/codeforces-round-582-div3/" class="prev" rel="prev" title="Codeforces Round 582 (Div 3)"><i class="fas fa-angle-left fa-fw"></i>Codeforces Round 582 (Div 3)</a>
-            <a href="/gnn-summary-1-gnn/" class="next" rel="next" title="图神经网络总结(一) —— 图神经网络">图神经网络总结(一) —— 图神经网络<i class="fas fa-angle-right fa-fw"></i></a></div>
+    <div class="post-nav"><a href="/beta%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%85%88%E9%AA%8C/" class="prev" rel="prev" title="Beta分布和共轭先验"><i class="fas fa-angle-left fa-fw"></i>Beta分布和共轭先验</a></div>
 </div>
 <div id="comments"><div id="valine" class="comment"></div><noscript>
                 Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
