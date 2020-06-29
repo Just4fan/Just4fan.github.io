@@ -19,7 +19,7 @@ CNN: Extract Spatial Features
 
 ## 1 图神经网络
 
-图神经网络(Graph Neural Networks, GNN)最早在[A new model for learning in graph domains(2005年)](https://ieeexplore.ieee.org/document/1555942)提出，相关的工作还有[The Graph Neural Network Model(2009年)](https://ieeexplore.ieee.org/document/4700287)，基本的思想是通过邻居结点间传播信息，获得图或结点的表示，这里介绍的图神经网络使用前馈神经网络聚合邻居结点的信息，根据……
+图神经网络(Graph Neural Networks, GNN)最早在[A new model for learning in graph domains(2005年)](https://ieeexplore.ieee.org/document/1555942)提出，相关的工作还有[The Graph Neural Network Model(2009年)](https://ieeexplore.ieee.org/document/4700287)，基本的思想是通过邻居结点间传播信息，获得图或结点的表示，这里介绍的图神经网络使用简单的前馈神经网络聚合邻居结点的信息。
 
 ### 1.1 巴拿赫不动点定理
 

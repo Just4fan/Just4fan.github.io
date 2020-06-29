@@ -11,7 +11,7 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://sparse.codes/" />
 <meta property="og:image" content="https://sparse.codes/logo.png"/>
-<meta property="og:updated_time" content="2020-06-23T16:18:05+08:00" />
+<meta property="og:updated_time" content="2020-06-24T12:29:09+08:00" />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://sparse.codes/logo.png"/>
 
@@ -103,8 +103,13 @@
         alt="/images/avatar.png"
         title="/images/avatar.png" /></a></div><h1 class="home-title">Muffin's Blog</h1><h2 class="home-subtitle"><div id="id-1" class="typeit"></div></h2><div class="links"><a href="https://github.com/muffin1998" title="GitHub" target="_blank" rel="noopener noreffer me"><i class="fab fa-github-alt fa-fw"></i></a><a href="https://weibo.com/xxxx" title="微博" target="_blank" rel="noopener noreffer me"><i class="fab fa-weibo fa-fw"></i></a><a href="https://steamcommunity.com/id/xxxx" title="Steam" target="_blank" rel="noopener noreffer me"><i class="fab fa-steam fa-fw"></i></a><a href="https://www.zhihu.com/people/xxxx" title="知乎" target="_blank" rel="noopener noreffer me"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/zhihu.svg"></i></a><a href="https://www.douban.com/people/xxxx" title="豆瓣" target="_blank" rel="noopener noreffer me"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/douban.svg"></i></a><a href="https://dev.to/xxxx" title="Dev.To" target="_blank" rel="noopener noreffer me"><i class="fab fa-dev fa-fw"></i></a><a href="https://space.bilibili.com/xxxx" title="bilibili" target="_blank" rel="noopener noreffer me"><i data-svg-src="/svg/icons/bilibili.min.svg"></i></a><a href="mailto:xxxx@xxxx.com" title="Email" rel=" me"><i class="far fa-envelope fa-fw"></i></a><a href="/index.xml" title="RSS" target="_blank" rel="noopener noreffer me"><i class="fas fa-rss fa-fw"></i></a></div></div>
 <article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/gnn-summary-2-gcn/">图神经网络总结(二) —— 图卷积网络</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>muffin</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2020-06-24">2020-06-24</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%85%A5%E9%97%A8/"><i class="far fa-folder fa-fw"></i>图神经网络入门</a></span></div><div class="content">卷积在深度学习中的应用很广泛，最开始接触深度学习的时候，一直认为卷积神经网络是专门用于图像特征提取的，实际上卷积神经网络最主要的优点在于其局</div><div class="post-footer">
+        <a href="/gnn-summary-2-gcn/">阅读全文</a><div class="post-tags">
+                <i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">图神经网络</a>,&nbsp;<a href="/tags/%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C/">图卷积网络</a>,&nbsp;<a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>,&nbsp;<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
         <a href="/gnn-summary-1-gnn/">图神经网络总结(一) —— 图神经网络</a>
-    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>muffin</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2020-06-23">2020-06-23</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%85%A5%E9%97%A8/"><i class="far fa-folder fa-fw"></i>“图神经网络入门”</a></span></div><div class="content">最近在看图神经网络的综述，数学功底太差看的云里雾里，记录一下学习过程中接触到的一些概念和自己的理解。 0 简介 图像、语音、文本等都可以表示为欧几</div><div class="post-footer">
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>muffin</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2020-06-23">2020-06-23</time></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%85%A5%E9%97%A8/"><i class="far fa-folder fa-fw"></i>图神经网络入门</a></span></div><div class="content">最近在看图神经网络的综述，数学功底太差看的云里雾里，记录一下学习过程中接触到的一些概念和自己的理解。 0 简介 图像、语音、文本等都可以表示为欧几</div><div class="post-footer">
         <a href="/gnn-summary-1-gnn/">阅读全文</a><div class="post-tags">
                 <i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">图神经网络</a>,&nbsp;<a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>,&nbsp;<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></div></div>
 </article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
@@ -127,11 +132,6 @@
     </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>muffin</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2019-05-24">2019-05-24</time></span></div><div class="content">2019.06.01更新 新增几个命令： /reload 重新加载功能异常的评论区 /recover 恢复被误删的评论区 /enable 手动开启评论区 增加的内容放在dev分支 计划更新： 黑名单</div><div class="post-footer">
         <a href="/go%E8%AF%AD%E8%A8%80%E7%BC%96%E5%86%99telegram%E8%AF%84%E8%AE%BA%E6%9C%BA%E5%99%A8%E4%BA%BA/">阅读全文</a><div class="post-tags">
                 <i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/go%E8%AF%AD%E8%A8%80/">Go语言</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
-        <a href="/%E5%87%A0%E9%81%93%E9%A2%98%E7%9B%AE/">几道题目</a>
-    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>muffin</a></span>&nbsp;<span class="post-publish">发布于 <time datetime="2019-05-17">2019-05-17</time></span></div><div class="content">Codeforces 1153C(Round 551 Div2) Serval and Parenthesis Sequence 题目链接：http://codeforces.com/problemset/problem/1153/C 题目大意：给定一个由</div><div class="post-footer">
-        <a href="/%E5%87%A0%E9%81%93%E9%A2%98%E7%9B%AE/">阅读全文</a><div class="post-tags">
-                <i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/codeforces/">Codeforces</a></div></div>
 </article><ul class="pagination"><li class="page-item active">
                     <span class="page-link">
                         <a href="/">1</a>

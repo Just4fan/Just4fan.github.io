@@ -3,7 +3,14 @@
         <title>所有文章 - Muffin&#39;s Blog</title>
         <link>https://sparse.codes/posts/</link>
         <description>所有文章 | Muffin&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 23 Jun 2020 16:18:05 &#43;0800</lastBuildDate><atom:link href="https://sparse.codes/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 24 Jun 2020 12:29:09 &#43;0800</lastBuildDate><atom:link href="https://sparse.codes/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>图神经网络总结(二) —— 图卷积网络</title>
+    <link>https://sparse.codes/gnn-summary-2-gcn/</link>
+    <pubDate>Wed, 24 Jun 2020 12:29:09 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://sparse.codes/gnn-summary-2-gcn/</guid>
+    <description><![CDATA[卷积在深度学习中的应用很广泛，最开始接触深度学习的时候，一直认为卷积神经网络是专门用于图像特征提取的，实际上卷积神经网络最主要的优点在于其局]]></description>
+</item><item>
     <title>图神经网络总结(一) —— 图神经网络</title>
     <link>https://sparse.codes/gnn-summary-1-gnn/</link>
     <pubDate>Tue, 23 Jun 2020 16:18:05 &#43;0800</pubDate>
